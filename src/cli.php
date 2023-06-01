@@ -11,6 +11,7 @@ use Phalcon\Db\Adapter\Pdo\Mysql;
 use Phalcon\Cache\Adapter\Stream;
 use Phalcon\Storage\SerializerFactory;
 
+require_once './vendor/autoload.php';
 $loader = new Loader();
 define("BASE_PATH", __DIR__);
 $loader->registerNamespaces(
@@ -27,32 +28,15 @@ $dispatcher->setDefaultNamespace('MyApp\Tasks');
 $container->setShared('dispatcher', $dispatcher);
 
 $container->set(
-    'db',
+    'mongo',
     function () {
-        return new Mysql(
-            [
-                'host'     => 'mysql-server',
-                'username' => 'root',
-                'password' => 'secret',
-                'dbname'   => 'testPhlacon',
-            ]
-        );
-    }
+        $mongo = new MongoDB\Client('mongodb+srv://myAtlasDBUser:myatlas-001@myatlas' .
+            'clusteredu.aocinmp.mongodb.net/?retryWrites=true&w=majority');
+        return $mongo->cli_optional->order;
+    },
+    true
 );
-$container->set(
-    'cache',
-    function () {
-        $serializerFactory = new SerializerFactory();
 
-        $options = [
-            'defaultSerializer' => 'Json',
-            'lifetime'          => 7200,
-            'storageDir'        => BASE_PATH . '/storage/cache',
-        ];
-
-        return new Stream($serializerFactory, $options);
-    }
-);
 
 
 $console = new Console($container);
