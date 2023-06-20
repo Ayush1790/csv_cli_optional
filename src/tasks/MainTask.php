@@ -27,7 +27,7 @@ class MainTask extends Task
             $date=(string)readline("Enter date ");
             $main->insertAction($id, $name, $qty, $price, $date);
         }elseif ($val==2) {
-            $res=$this->mongo->find([]);
+            $res=$this->mongo->find([],['sort'=>['rating'=>-1]]);
            foreach ($res as $value) {
             echo "Name => ".$value->name."\nPrice => ".$value->price."\nRating => ".$value->rating;
             echo "\n\n";
